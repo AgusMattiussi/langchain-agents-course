@@ -57,7 +57,7 @@ git checkout <branch-name>
 cat README.md
 ```
 
-Or view directly on GitHub: `https://github.com/<repo>/tree/<branch-name>`
+Or view directly on GitHub: `https://github.com/AgusMattiussi/langchain-agents-course/tree/<branch-name>`
 
 ## Prerequisites
 
@@ -71,15 +71,13 @@ Or view directly on GitHub: `https://github.com/<repo>/tree/<branch-name>`
 
 ```bash
 # Clone and navigate
-git clone <repository-url>
+git clone https://github.com/AgusMattiussi/langchain-agents-course.git
 cd langchain_course
 
 # Install dependencies
 uv sync
 
-# Copy environment template
-cp .env.example .env
-# Edit .env with your API keys
+# Set environment variables
 
 # Run main branch
 python main.py
