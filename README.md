@@ -1,75 +1,95 @@
-# LangChain Course - Main Branch
+# LangChain Agents Course
 
-## Overview
+A comprehensive hands-on course exploring LangChain concepts through progressively complex implementations. Each branch focuses on a specific topic, building from basic LLM chains to production-ready applications.
 
-This branch serves as the **foundation** of the LangChain course, demonstrating the basic setup and usage of LangChain for building LLM-powered applications.
+## Repository Overview
 
-## Purpose
+This repository contains multiple branches, each demonstrating different LangChain patterns and techniques. Start with `main` for fundamentals, then explore specialized branches based on your learning goals.
 
-Introduce the core concepts of LangChain:
+## Branch Documentation
 
-- Setting up LLM providers (OpenAI, Ollama)
-- Using `PromptTemplate` for structured prompts
-- Creating chains with **LCEL (LangChain Expression Language)**
+| Branch                                                              | Topic                 | Description                                                  |
+| ------------------------------------------------------------------- | --------------------- | ------------------------------------------------------------ |
+| [`main`](../../tree/main)                                           | **LLM Basics**        | Foundation: OpenAI/Ollama setup, PromptTemplate, LCEL chains |
+| [`search-agent`](../../tree/search-agent)                           | **Structured Output** | Agents with Pydantic schemas and Tavily search               |
+| [`tool-calling-search-agent`](../../tree/tool-calling-search-agent) | **Tool Calling**      | Manual tool execution loop with callback handlers            |
+| [`agent-exec-search-agent`](../../tree/agent-exec-search-agent)     | **ReAct Pattern**     | ReAct agent with scratchpad and output parsing               |
+| [`react-search-agent`](../../tree/react-search-agent)               | **AgentExecutor**     | Production ReAct with AgentExecutor and LCEL                 |
+| [`rag-gist`](../../tree/rag-gist)                                   | **RAG Fundamentals**  | Pinecone vector store, embeddings, retrieval chains          |
+| [`document-helper`](../../tree/document-helper)                     | **Full Application**  | Streamlit UI, Tavily crawling, agent-based QA                |
 
-## Features
+## Learning Path
 
-### LLM Integration
-
-- **OpenAI**: Uses `ChatOpenAI` with `gpt-4o-mini` model
-- **Ollama**: Alternative local LLM support via `ChatOllama` (commented out)
-
-### LCEL Chain
-
-Demonstrates the pipe (`|`) operator to chain prompts and models:
-
-```python
-chain = summary_prompt | llm
-response = chain.invoke({"information": information})
+```mermaid
+graph LR
+    A[main] --> B[search-agent]
+    B --> C[tool-calling-search-agent]
+    C --> D[agent-exec-search-agent]
+    D --> E[react-search-agent]
+    A --> F[rag-gist]
+    F --> G[document-helper]
 ```
 
-### Text Summarization
+### Recommended Order
 
-The example summarizes biographical information and extracts interesting facts.
+1. **`main`** - Start here to understand basic LangChain setup and LCEL
+2. **`search-agent`** - Learn structured outputs with Pydantic
+3. **`tool-calling-search-agent`** - Understand the internals of tool calling
+4. **`agent-exec-search-agent`** - Deep dive into ReAct pattern
+5. **`react-search-agent`** - Use high-level AgentExecutor
+6. **`rag-gist`** - Learn RAG with vector stores
+7. **`document-helper`** - Build a complete application
 
-## File Structure
+## Accessing Branch Documentation
 
+Each branch contains its own `README.md` with:
+
+- Purpose and overview
+- Key features and code examples
+- File structure
+- Design decisions
+- Comparison with other branches
+
+To access a branch's documentation:
+
+```bash
+git checkout <branch-name>
+cat README.md
 ```
-├── main.py           # Main application entry point
-├── pyproject.toml    # Project dependencies
-├── .env              # Environment variables (API keys)
-└── .gitignore        # Git ignore rules
+
+Or view directly on GitHub: `https://github.com/<repo>/tree/<branch-name>`
+
+## Prerequisites
+
+- Python 3.11+
+- [uv](https://docs.astral.sh/uv/) package manager
+- OpenAI API key
+- Tavily API key (for search branches)
+- Pinecone API key (for RAG branches)
+
+## Quick Start
+
+```bash
+# Clone and navigate
+git clone <repository-url>
+cd langchain_course
+
+# Install dependencies
+uv sync
+
+# Copy environment template
+cp .env.example .env
+# Edit .env with your API keys
+
+# Run main branch
+python main.py
 ```
 
-## Key Design Decisions
+## Technology Stack
 
-1. **Environment Variables**: Uses `python-dotenv` for secure API key management
-2. **Temperature = 0**: Deterministic outputs for consistent results
-3. **LCEL over Legacy Chains**: Uses modern LangChain Expression Language for composability
-
-## Getting Started
-
-1. Install dependencies:
-
-   ```bash
-   uv sync
-   ```
-
-2. Set up your `.env` file:
-
-   ```
-   OPENAI_API_KEY=your_api_key_here
-   ```
-
-3. Run the application:
-   ```bash
-   python main.py
-   ```
-
-## Differences from Other Branches
-
-This is the **base branch** that other branches build upon. Other branches extend this foundation with:
-
-- Agents and tools (`search-agent`, `react-search-agent`)
-- RAG implementations (`rag-gist`, `document-helper`)
-- Callback handlers (`tool-calling-search-agent`, `agent-exec-search-agent`)
+- **LLM**: OpenAI GPT-4o-mini, Ollama (optional)
+- **Search**: Tavily Search API
+- **Vector Store**: Pinecone
+- **Embeddings**: OpenAI text-embedding-3-small
+- **Framework**: LangChain, LangChain-classic
+- **UI**: Streamlit (document-helper branch)
