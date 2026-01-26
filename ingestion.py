@@ -107,39 +107,39 @@ async def main():
             f"TavilyCrawl: Successfully crawled {len(tavily_crawl_results)} URLs from documentation site"
         )
 
-    # all_docs = []
-    # for tavily_crawl_result_item in tavily_crawl_results["results"]:
-    #     log_info(
-    #         f"TavilyCrawl: Successfully crawled {tavily_crawl_result_item['url']} from documentation site"
-    #     )
-    #     all_docs.append(
-    #         Document(
-    #             page_content=tavily_crawl_result_item["raw_content"],
-    #             metadata={"source": tavily_crawl_result_item["url"]},
-    #         )
-    #     )
+    all_docs = []
+    for tavily_crawl_result_item in tavily_crawl_results["results"]:
+        log_info(
+            f"TavilyCrawl: Successfully crawled {tavily_crawl_result_item['url']} from documentation site"
+        )
+        all_docs.append(
+            Document(
+                page_content=tavily_crawl_result_item["raw_content"],
+                metadata={"source": tavily_crawl_result_item["url"]},
+            )
+        )
 
-    # # Split documents into chunks
-    # log_header("DOCUMENT CHUNKING PHASE")
-    # log_info(
-    #     f"✂️  Text Splitter: Processing {len(all_docs)} documents with 4000 chunk size and 200 overlap",
-    #     Colors.YELLOW,
-    # )
-    # text_splitter = RecursiveCharacterTextSplitter(chunk_size=4000, chunk_overlap=200)
-    # splitted_docs = text_splitter.split_documents(all_docs)
-    # log_success(
-    #     f"Text Splitter: Created {len(splitted_docs)} chunks from {len(all_docs)} documents"
-    # )
+    # Split documents into chunks
+    log_header("DOCUMENT CHUNKING PHASE")
+    log_info(
+        f"✂️  Text Splitter: Processing {len(all_docs)} documents with 4000 chunk size and 200 overlap",
+        Colors.YELLOW,
+    )
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=4000, chunk_overlap=200)
+    splitted_docs = text_splitter.split_documents(all_docs)
+    log_success(
+        f"Text Splitter: Created {len(splitted_docs)} chunks from {len(all_docs)} documents"
+    )
 
-    # # Process documents asynchronously
-    # await index_documents_async(splitted_docs, batch_size=500)
+    # Process documents asynchronously
+    await index_documents_async(splitted_docs, batch_size=500)
 
     log_header("PIPELINE COMPLETE")
     log_success("🎉 Documentation ingestion pipeline finished successfully!")
     log_info("📊 Summary:", Colors.BOLD)
     log_info(f"   • Pages crawled: {len(tavily_crawl_results)}")
-    # log_info(f"   • Documents extracted: {len(all_docs)}")
-    # log_info(f"   • Chunks created: {len(splitted_docs)}")
+    log_info(f"   • Documents extracted: {len(all_docs)}")
+    log_info(f"   • Chunks created: {len(splitted_docs)}")
 
 
 if __name__ == "__main__":
