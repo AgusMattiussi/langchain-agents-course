@@ -1,93 +1,106 @@
-# LangChain Agents Course
+# LangChain Course - LangGraph Agent Executor Branch
 
-A comprehensive hands-on course exploring LangChain concepts through progressively complex implementations. Each branch focuses on a specific topic, building from basic LLM chains to production-ready applications.
+## Overview
 
-## Repository Overview
+This branch implements a **ReAct-style agent** using **LangGraph** to create a stateful, graph-based execution flow with function calling capabilities.
 
-This repository contains multiple branches, each demonstrating different LangChain patterns and techniques. Start with `main` for fundamentals, then explore specialized branches based on your learning goals.
+## Purpose
 
-## Branch Documentation
+Demonstrate how to build agents using LangGraph:
 
-| Branch                                                              | Topic                 | Description                                                  |
-| ------------------------------------------------------------------- | --------------------- | ------------------------------------------------------------ |
-| [`main`](../../tree/main)                                           | **LLM Basics**        | Foundation: OpenAI/Ollama setup, PromptTemplate, LCEL chains |
-| [`search-agent`](../../tree/search-agent)                           | **Structured Output** | Agents with Pydantic schemas and Tavily search               |
-| [`tool-calling-search-agent`](../../tree/tool-calling-search-agent) | **Tool Calling**      | Manual tool execution loop with callback handlers            |
-| [`agent-exec-search-agent`](../../tree/agent-exec-search-agent)     | **ReAct Pattern**     | ReAct agent with scratchpad and output parsing               |
-| [`react-search-agent`](../../tree/react-search-agent)               | **AgentExecutor**     | Production ReAct with AgentExecutor and LCEL                 |
-| [`rag-gist`](../../tree/rag-gist)                                   | **RAG Fundamentals**  | Pinecone vector store, embeddings, retrieval chains          |
-| [`document-helper`](../../tree/document-helper)                     | **Full Application**  | Streamlit UI, Tavily crawling, agent-based QA                |
+- **StateGraph** for managing conversation state
+- **Conditional edges** for decision-making flow
+- **ToolNode** for automatic tool execution
+- **Function calling** with bound tools
 
-## Learning Path
+## Features
+
+### LangGraph State Machine (`main.py`)
+
+Creates a graph with reasoning and action nodes:
+
+```python
+flow = StateGraph(MessagesState)
+flow.add_node(AGENT_REASON, run_agent_reasoning)
+flow.add_node(ACT, tool_node)
+flow.add_conditional_edges(AGENT_REASON, should_continue, {END: END, ACT: ACT})
+flow.add_edge(ACT, AGENT_REASON)
+app = flow.compile()
+```
+
+### Agent Reasoning Node (`node.py`)
+
+Invokes the LLM with system message and conversation history:
+
+```python
+def run_agent_reasoning(state: MessagesState) -> MessagesState:
+    response = llm.invoke([{"role": "system", "content": SYSTEM_MESSAGE}, *state["messages"]])
+    return {"messages": [response]}
+```
+
+### Tool Definitions (`react.py`)
+
+Defines tools and binds them to the LLM:
+
+```python
+tools = [TavilySearch(max_results=1), triple]
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0).bind_tools(tools)
+```
+
+## Execution Flow
 
 ```mermaid
 graph LR
-    A[main] --> B[search-agent]
-    B --> C[tool-calling-search-agent]
-    C --> D[agent-exec-search-agent]
-    D --> E[react-search-agent]
-    A --> F[rag-gist]
-    F --> G[document-helper]
+    A[Start] --> B[agent_reason]
+    B --> C{tool_calls?}
+    C -->|Yes| D[act - ToolNode]
+    D --> B
+    C -->|No| E[END]
 ```
 
-### Recommended Order
+## File Structure
 
-1. **`main`** - Start here to understand basic LangChain setup and LCEL
-2. **`search-agent`** - Learn structured outputs with Pydantic
-3. **`tool-calling-search-agent`** - Understand the internals of tool calling
-4. **`agent-exec-search-agent`** - Deep dive into ReAct pattern
-5. **`react-search-agent`** - Use high-level AgentExecutor
-6. **`rag-gist`** - Learn RAG with vector stores
-7. **`document-helper`** - Build a complete application
-
-## Accessing Branch Documentation
-
-Each branch contains its own `README.md` with:
-
-- Purpose and overview
-- Key features and code examples
-- File structure
-- Design decisions
-- Comparison with other branches
-
-To access a branch's documentation:
-
-```bash
-git checkout <branch-name>
-cat README.md
+```
+├── main.py        # LangGraph flow definition
+├── node.py        # Agent reasoning node + ToolNode
+├── react.py       # Tools and LLM configuration
+├── flow.png       # Generated graph visualization
+├── pyproject.toml
+└── .env
 ```
 
-Or view directly on GitHub: `https://github.com/AgusMattiussi/langchain-agents-course/tree/<branch-name>`
+## Key Design Decisions
 
-## Prerequisites
+1. **LangGraph over AgentExecutor**: More control and visibility over agent flow
+2. **MessagesState**: Built-in state management for conversation history
+3. **Conditional Edges**: Dynamic routing based on tool call presence
+4. **ToolNode**: Prebuilt node for automatic tool execution
+5. **Graph Visualization**: Exports flow diagram as PNG
 
-- Python 3.11+
-- [uv](https://docs.astral.sh/uv/) package manager
-- OpenAI API key
-- Tavily API key (for search branches)
-- Pinecone API key (for RAG branches)
+## Getting Started
 
-## Quick Start
+1. Install dependencies:
 
-```bash
-# Clone and navigate
-git clone https://github.com/AgusMattiussi/langchain-agents-course.git
-cd langchain_course
+   ```bash
+   uv sync
+   ```
 
-# Install dependencies
-uv sync
+2. Configure `.env`:
 
-# Set environment variables
+   ```
+   OPENAI_API_KEY=your_key
+   TAVILY_API_KEY=your_key
+   ```
 
-# Run main branch
-python main.py
-```
+3. Run the agent:
+   ```bash
+   python main.py
+   ```
 
-## Technology Stack
+## Differences from Other Branches
 
-- **LLM**: OpenAI GPT-4o-mini, Ollama (optional)
-- **Search**: Tavily Search API
-- **Vector Store**: Pinecone
-- **Embeddings**: OpenAI text-embedding-3-small
-- **Framework**: LangChain, LangChain-classic
-- **UI**: Streamlit (document-helper branch)
+| Compared To                 | Difference                           |
+| --------------------------- | ------------------------------------ |
+| `react-search-agent`        | LangGraph vs LangChain AgentExecutor |
+| `tool-calling-search-agent` | Graph-based vs manual loop           |
+| `agent-exec-search-agent`   | Declarative graph vs procedural code |
