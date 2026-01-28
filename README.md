@@ -8,15 +8,19 @@ This repository contains multiple branches, each demonstrating different LangCha
 
 ## Branch Documentation
 
-| Branch                                                              | Topic                 | Description                                                  |
-| ------------------------------------------------------------------- | --------------------- | ------------------------------------------------------------ |
-| [`main`](../../tree/main)                                           | **LLM Basics**        | Foundation: OpenAI/Ollama setup, PromptTemplate, LCEL chains |
-| [`search-agent`](../../tree/search-agent)                           | **Structured Output** | Agents with Pydantic schemas and Tavily search               |
-| [`tool-calling-search-agent`](../../tree/tool-calling-search-agent) | **Tool Calling**      | Manual tool execution loop with callback handlers            |
-| [`agent-exec-search-agent`](../../tree/agent-exec-search-agent)     | **ReAct Pattern**     | ReAct agent with scratchpad and output parsing               |
-| [`react-search-agent`](../../tree/react-search-agent)               | **AgentExecutor**     | Production ReAct with AgentExecutor and LCEL                 |
-| [`rag-gist`](../../tree/rag-gist)                                   | **RAG Fundamentals**  | Pinecone vector store, embeddings, retrieval chains          |
-| [`document-helper`](../../tree/document-helper)                     | **Full Application**  | Streamlit UI, Tavily crawling, agent-based QA                |
+| Branch                                                                | Topic                  | Description                                                   |
+| --------------------------------------------------------------------- | ---------------------- | ------------------------------------------------------------- |
+| [`main`](../../tree/main)                                             | **LLM Basics**         | Foundation: OpenAI/Ollama setup, PromptTemplate, LCEL chains  |
+| [`search-agent`](../../tree/search-agent)                             | **Structured Output**  | Agents with Pydantic schemas and Tavily search                |
+| [`tool-calling-search-agent`](../../tree/tool-calling-search-agent)   | **Tool Calling**       | Manual tool execution loop with callback handlers             |
+| [`agent-exec-search-agent`](../../tree/agent-exec-search-agent)       | **ReAct Pattern**      | ReAct agent with scratchpad and output parsing                |
+| [`react-search-agent`](../../tree/react-search-agent)                 | **AgentExecutor**      | Production ReAct with AgentExecutor and LCEL                  |
+| [`rag-gist`](../../tree/rag-gist)                                     | **RAG Fundamentals**   | Pinecone vector store, embeddings, retrieval chains           |
+| [`document-helper`](../../tree/document-helper)                       | **Full Application**   | Streamlit UI, Tavily crawling, agent-based QA                 |
+| [`langgraph-agent-executor`](../../tree/langgraph-agent-executor)     | **LangGraph Basics**   | StateGraph, ToolNode, conditional edges with function calling |
+| [`langgraph-reflection-agent`](../../tree/langgraph-reflection-agent) | **Reflection Pattern** | Generate-reflect loop for iterative content improvement       |
+| [`langgraph-reflexion-agent`](../../tree/langgraph-reflexion-agent)   | **Reflexion Pattern**  | Draft-execute-revise cycle with tool-augmented research       |
+| [`langgraph-agentic-rag`](../../tree/langgraph-agentic-rag)           | **Agentic RAG**        | Adaptive routing, document grading, hallucination checking    |
 
 ## Learning Path
 
@@ -28,6 +32,10 @@ graph LR
     D --> E[react-search-agent]
     A --> F[rag-gist]
     F --> G[document-helper]
+    E --> H[langgraph-agent-executor]
+    H --> I[langgraph-reflection-agent]
+    I --> J[langgraph-reflexion-agent]
+    G --> K[langgraph-agentic-rag]
 ```
 
 ### Recommended Order
@@ -39,6 +47,10 @@ graph LR
 5. **`react-search-agent`** - Use high-level AgentExecutor
 6. **`rag-gist`** - Learn RAG with vector stores
 7. **`document-helper`** - Build a complete application
+8. **`langgraph-agent-executor`** - LangGraph StateGraph fundamentals
+9. **`langgraph-reflection-agent`** - Self-improvement through reflection
+10. **`langgraph-reflexion-agent`** - Tool-augmented Reflexion pattern
+11. **`langgraph-agentic-rag`** - Production Agentic RAG with grading
 
 ## Accessing Branch Documentation
 
